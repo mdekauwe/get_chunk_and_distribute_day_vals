@@ -1077,7 +1077,7 @@ void write_spinup_file(int i, int j, control *c, met *m, float *tmax_ij,
             odays += 365;
         }
     }*/
-    long  odays = 10958;
+    long  odays = 7305;
     int   ovars = 9;
     long  ocnt;
     float odata[ovars * odays];
