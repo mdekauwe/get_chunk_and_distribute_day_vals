@@ -1078,7 +1078,7 @@ void write_spinup_file(int i, int j, control *c, met *m, float *tmax_ij,
         }
     }*/
     long  odays = 7305;
-    int   ovars = 9;
+    int   ovars = 11;
     long  ocnt;
     float odata[ovars * odays];
 
@@ -1131,21 +1131,35 @@ void write_spinup_file(int i, int j, control *c, met *m, float *tmax_ij,
         doy_cnt = 0;
         for (kk = st_idx; kk < en_idx; kk++) {
 
+            if (kk+1 > en_idx) {
+                vph09_tomorrow = vph09_ij[kk];
+            } else {
+                vph09_tomorrow = vph09_ij[kk+1];
+            }
+
+            if (kk == st_idx) {
+                vph15_yesterday = vph15_ij[kk];
+            } else {
+                vph15_yesterday = vph15_ij[kk-1];
+            }
+
             /* dissagregate drivers */
             if (ndays == 365)
                 sw = rad_clim_nonleap_ij[doy_cnt];
             else
                 sw = rad_clim_leap_ij[doy_cnt];
-                
+
             odata[ocnt] = (float)year;
             odata[ocnt+1] = (float)doy_cnt+1;
             odata[ocnt+2] = tmin_ij[kk];
             odata[ocnt+3] = tmax_ij[kk];
             odata[ocnt+4] = vph09_ij[kk];
             odata[ocnt+5] = vph15_ij[kk];
-            odata[ocnt+6] = sw;
-            odata[ocnt+7] = rain_ij[kk];
-            odata[ocnt+8] = co2;
+            odata[ocnt+6] = vph09_tomorrow;
+            odata[ocnt+7] = vph15_yesterday;
+            odata[ocnt+8] = sw;
+            odata[ocnt+9] = rain_ij[kk];
+            odata[ocnt+10] = co2;
 
             ocnt += ovars;
             doy_cnt++;
@@ -1200,7 +1214,7 @@ void write_forcing_file(int i, int j, control *c, met *m, float *tmax_ij,
         }
     } */
     long  odays = 8035;
-    int   ovars = 9;
+    int   ovars = 11;
     long  ocnt;
     float odata[ovars * odays];
 
@@ -1280,6 +1294,18 @@ void write_forcing_file(int i, int j, control *c, met *m, float *tmax_ij,
         jj = st_idx_rad;
         for (kk = st_idx; kk < en_idx; kk++) {
 
+            if (kk+1 > en_idx) {
+                vph09_tomorrow = vph09_ij[kk];
+            } else {
+                vph09_tomorrow = vph09_ij[kk+1];
+            }
+
+            if (kk == st_idx) {
+                vph15_yesterday = vph15_ij[kk];
+            } else {
+                vph15_yesterday = vph15_ij[kk-1];
+            }
+            
             /* dissagregate drivers */
             if (year < 1990 && ndays == 365)
                 sw = rad_clim_nonleap_ij[doy_cnt];
@@ -1306,9 +1332,11 @@ void write_forcing_file(int i, int j, control *c, met *m, float *tmax_ij,
             odata[ocnt+3] = tmax_ij[kk];
             odata[ocnt+4] = vph09_ij[kk];
             odata[ocnt+5] = vph15_ij[kk];
-            odata[ocnt+6] = sw;
-            odata[ocnt+7] = rain_ij[kk];
-            odata[ocnt+8] = co2[co2_index];
+            odata[ocnt+6] = vph09_tomorrow;
+            odata[ocnt+7] = vph15_yesterday;
+            odata[ocnt+8] = sw;
+            odata[ocnt+9] = rain_ij[kk];
+            odata[ocnt+10] = co2[co2_index];
 
 
             ocnt += ovars;
