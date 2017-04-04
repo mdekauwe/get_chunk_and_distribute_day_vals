@@ -1149,6 +1149,7 @@ void write_spinup_file(int i, int j, control *c, met *m, float *tmax_ij,
             else
                 sw = rad_clim_leap_ij[doy_cnt];
 
+
             odata[ocnt] = (float)year;
             odata[ocnt+1] = (float)doy_cnt+1;
             odata[ocnt+2] = tmin_ij[kk];
@@ -1305,7 +1306,7 @@ void write_forcing_file(int i, int j, control *c, met *m, float *tmax_ij,
             } else {
                 vph15_yesterday = vph15_ij[kk-1];
             }
-            
+
             /* dissagregate drivers */
             if (year < 1990 && ndays == 365)
                 sw = rad_clim_nonleap_ij[doy_cnt];
@@ -1325,6 +1326,20 @@ void write_forcing_file(int i, int j, control *c, met *m, float *tmax_ij,
                 }
             }
 
+            /*
+            ** There are a sequence (as much as 12 days, perhaps more) of
+            ** bad PAR data in the AWAP data for certain pixels. If we hit
+            ** one of these instances we are going to infill based on the
+            ** climatology. Because it looks like long sequences are
+            ** missing it makes nosense to attempt to fill with days
+            ** around the bad day I think
+            */
+
+            if (sw < 0.0 && ndays == 365) {
+                sw = rad_clim_nonleap_ij[doy_cnt];
+            } else if (sw < 0.0 && ndays == 366) {
+                sw = rad_clim_leap_ij[doy_cnt];
+            }
 
             odata[ocnt] = (float)year;
             odata[ocnt+1] = (float)doy_cnt+1;
