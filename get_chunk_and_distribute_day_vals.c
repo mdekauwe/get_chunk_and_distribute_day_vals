@@ -1131,6 +1131,12 @@ void write_spinup_file(int i, int j, control *c, met *m, float *tmax_ij,
         doy_cnt = 0;
         for (kk = st_idx; kk < en_idx; kk++) {
 
+            /* dissagregate drivers */
+            if (ndays == 365)
+                sw = rad_clim_nonleap_ij[doy_cnt];
+            else
+                sw = rad_clim_leap_ij[doy_cnt];
+                
             odata[ocnt] = (float)year;
             odata[ocnt+1] = (float)doy_cnt+1;
             odata[ocnt+2] = tmin_ij[kk];
